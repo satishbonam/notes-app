@@ -183,10 +183,6 @@ const NoteEditorPage: React.FC = () => {
     saveNote(noteContent); // Save note with updated category
   };
 
-  if ((!isAuthenticated && !router.query.token) && !isAuthLoading) {
-    router.push('/');
-  }
-
   return (
     <div className='p-4'>
       <div className='flex items-center justify-between mb-4'>
