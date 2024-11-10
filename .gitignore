@@ -1,0 +1,7 @@
+*/__pycache__/**
+*/.pytest_cache/**
+*/.vscode
+*.pyc
+*/venv/**
+*/.idea
+backend/app/secrets.py
