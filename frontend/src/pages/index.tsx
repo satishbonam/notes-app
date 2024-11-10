@@ -17,7 +17,7 @@ const Home: React.FC = () => {
           </Link>
 
           <Button
-            onClick={() => logout({ returnTo: window.location.origin })}
+            onClick={() => logout()}
             variant='default'>
             Logout
           </Button>

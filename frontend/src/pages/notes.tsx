@@ -77,7 +77,7 @@ const NotesPage: React.FC = () => {
   };
 
   const handleLogout = () => {
-    logout({ returnTo: window.location.origin });
+    logout();
   };
 
   return (

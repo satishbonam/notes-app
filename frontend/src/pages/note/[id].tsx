@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useRef, useState, useCallback,ForwardedRef } from 'react';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import { Delta } from 'quill';
@@ -13,10 +14,18 @@ import { useFetchCategories } from '@/hooks/useFetchCategories';
 
 const clientId = uuidv4();
 
-const QuillNoSSRWrapper = dynamic(
+interface QuillProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  forwardedRef?: ForwardedRef<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any; // Allow other props
+}
+
+const QuillNoSSRWrapper = dynamic<QuillProps>(
   async () => {
     const { default: RQ } = await import('react-quill');
-    return ({ forwardedRef, ...props }) => <RQ ref={forwardedRef} {...props} />;
+    // eslint-disable-next-line react/display-name
+    return ({ forwardedRef, ...props }: QuillProps) => <RQ ref={forwardedRef} {...props} />;
   },
   { ssr: false }
 );
@@ -35,6 +44,7 @@ const NoteEditorPage: React.FC = () => {
   } = useFetchCategories();
 
   const [socket, setSocket] = useState<WebSocket>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const quillRef = useRef<any>(null);
   const [noteContent, setNoteContent] = useState('');
   const noteTitleRef = useRef<string>(''); // Ref for note title
@@ -84,9 +94,9 @@ const NoteEditorPage: React.FC = () => {
     if (noteId !== 'new' && noteId) {
       const token = router.query.token;
       const socket = token
-        ? new WebSocket(`ws://localhost:8000/ws/notes/${noteId}/${token}/`)
+        ? new WebSocket(`${process.env.NEXT_WS_URL}/notes/${noteId}/${token}/`)
         : new WebSocket(
-            `ws://localhost:8000/ws/notes/${noteId}/?authToken=${authToken}`
+            `${process.env.NEXT_WS_URL}/notes/${noteId}/?authToken=${authToken}`
           );
 
       socket.onopen = () => console.log('WebSocket connected');
@@ -125,7 +135,7 @@ const NoteEditorPage: React.FC = () => {
               title: noteTitleRef.current || 'Untitled',
               content,
               user_updated_category_id: parseInt(
-                selectedCategoryRef.current?.value
+                (selectedCategoryRef.current as any)?.value
               ),
             },
           });
@@ -138,7 +148,7 @@ const NoteEditorPage: React.FC = () => {
               title: noteTitleRef.current || 'Untitled',
               content,
               user_updated_category_id: parseInt(
-                selectedCategoryRef.current?.value
+                (selectedCategoryRef.current as any)?.value
               ),
             },
           },!!router.query.token);

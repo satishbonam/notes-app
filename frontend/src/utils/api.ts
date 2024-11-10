@@ -9,6 +9,7 @@ export const useApi = () => {
   const [authToken, setAuthToken] = useState<string | null>(null);
 
   const api = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async <T = any>(
       url: string,
       options: AxiosRequestConfig = {},

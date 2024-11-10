@@ -5,3 +5,6 @@
 */venv/**
 */.idea
 backend/app/secrets.py
+letsencrypt/accounts/acme-v02.api.letsencrypt.org/directory/7de2c0ed9ea77766b11878aab1aacb34/meta.json
+letsencrypt/accounts/acme-v02.api.letsencrypt.org/directory/7de2c0ed9ea77766b11878aab1aacb34/private_key.json
+letsencrypt/accounts/acme-v02.api.letsencrypt.org/directory/7de2c0ed9ea77766b11878aab1aacb34/regr.json

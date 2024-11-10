@@ -49,7 +49,8 @@ const AsyncCategorySelect: React.FC<AsyncCategorySelectProps> = ({
     <div className='space-y-4'>
       <Select
         onValueChange={(value) => onCategoryChange(value)}
-        defaultValue={localSelectedCategory?.value}>
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        defaultValue={(localSelectedCategory as any)?.value}>
         <SelectTrigger className='w-32 text-sm border-gray-300'>
           <SelectValue placeholder='Select Category' />
         </SelectTrigger>
