@@ -94,9 +94,9 @@ const NoteEditorPage: React.FC = () => {
     if (noteId !== 'new' && noteId) {
       const token = router.query.token;
       const socket = token
-        ? new WebSocket(`${process.env.NEXT_WS_URL}/notes/${noteId}/${token}/`)
+        ? new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}/notes/${noteId}/${token}/`)
         : new WebSocket(
-            `${process.env.NEXT_WS_URL}/notes/${noteId}/?authToken=${authToken}`
+            `${process.env.NEXT_PUBLIC_WS_URL}/notes/${noteId}/?authToken=${authToken}`
           );
 
       socket.onopen = () => console.log('WebSocket connected');
