@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useRef, useState, useCallback,ForwardedRef } from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  ForwardedRef,
+} from 'react';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import { Delta } from 'quill';
@@ -25,7 +31,9 @@ const QuillNoSSRWrapper = dynamic<QuillProps>(
   async () => {
     const { default: RQ } = await import('react-quill');
     // eslint-disable-next-line react/display-name
-    return ({ forwardedRef, ...props }: QuillProps) => <RQ ref={forwardedRef} {...props} />;
+    return ({ forwardedRef, ...props }: QuillProps) => (
+      <RQ ref={forwardedRef} {...props} />
+    );
   },
   { ssr: false }
 );
@@ -35,7 +43,7 @@ import 'react-quill/dist/quill.snow.css';
 const NoteEditorPage: React.FC = () => {
   const router = useRouter();
   const { id: noteId } = router.query as { id: string };
-  const { api, authToken ,isAuthenticated,isLoading:isAuthLoading} = useApi();
+  const { api, authToken } = useApi();
   const {
     categories,
     fetchCategories,
@@ -68,7 +76,13 @@ const NoteEditorPage: React.FC = () => {
       const fetchNote = async () => {
         try {
           const token = router.query.token;
-          const response = token?await api(`/notes/${noteId}/?token=${token}`, { method: 'GET' },true):await api(`/notes/${noteId}/`, { method: 'GET' });
+          const response = token
+            ? await api(
+                `/notes/${noteId}/?token=${token}`,
+                { method: 'GET' },
+                true
+              )
+            : await api(`/notes/${noteId}/`, { method: 'GET' });
 
           setNoteContent(response.data.content);
           setIsNoteOwner(response.data.is_owner);
@@ -77,7 +91,7 @@ const NoteEditorPage: React.FC = () => {
             label: response.data?.user_updated_category?.name,
             value: String(response.data?.user_updated_category?.id),
           };
-        } catch  {
+        } catch {
           setNoteFetchError('Failed to fetch note data');
         } finally {
           setLoading(false);
@@ -94,7 +108,9 @@ const NoteEditorPage: React.FC = () => {
     if (noteId !== 'new' && noteId) {
       const token = router.query.token;
       const socket = token
-        ? new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}/notes/${noteId}/${token}/`)
+        ? new WebSocket(
+            `${process.env.NEXT_PUBLIC_WS_URL}/notes/${noteId}/${token}/`
+          )
         : new WebSocket(
             `${process.env.NEXT_PUBLIC_WS_URL}/notes/${noteId}/?authToken=${authToken}`
           );
@@ -141,17 +157,23 @@ const NoteEditorPage: React.FC = () => {
           });
           router.replace(`/note/${response.data.id}`);
         } else {
-          const url=router.query.token?`/notes/${noteId}/?token=${router.query.token}`:`/notes/${noteId}/`
-          await api(url, {
-            method: 'PUT',
-            data: {
-              title: noteTitleRef.current || 'Untitled',
-              content,
-              user_updated_category_id: parseInt(
-                (selectedCategoryRef.current as any)?.value
-              ),
+          const url = router.query.token
+            ? `/notes/${noteId}/?token=${router.query.token}`
+            : `/notes/${noteId}/`;
+          await api(
+            url,
+            {
+              method: 'PUT',
+              data: {
+                title: noteTitleRef.current || 'Untitled',
+                content,
+                user_updated_category_id: parseInt(
+                  (selectedCategoryRef.current as any)?.value
+                ),
+              },
             },
-          },!!router.query.token);
+            !!router.query.token
+          );
         }
       } catch {
         //
