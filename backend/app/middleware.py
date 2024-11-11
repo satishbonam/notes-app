@@ -86,7 +86,7 @@ class JWTAuthMiddleware(BaseMiddleware):
 
         if response.status_code == 200:
             user_info = response.json()
-            user, created =await sync_to_async(User.objects.get_or_create)(email=user_info.get("email"))
+            user, created =await sync_to_async(User.objects.get_or_create)(email=user_info.get("email"), username=username)
             if created:
                 user.username = username
             await sync_to_async(user.save)()

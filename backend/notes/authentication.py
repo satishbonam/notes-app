@@ -81,7 +81,7 @@ class Auth0JSONWebTokenAuthentication(BaseAuthentication):
             if response.status_code == 200:
                 user_info = response.json()
                 user, created = User.objects.get_or_create(
-                    email=user_info.get("email"))
+                    email=user_info.get("email"), username=username)
                 if created:
                     user.username = username
                 user.save()
@@ -100,7 +100,7 @@ class Auth0JSONWebTokenAuthentication(BaseAuthentication):
             if response.status_code == 200:
                 user_info = response.json()
                 user, created = User.objects.get_or_create(
-                    email=user_info.get("email"))
+                    email=user_info.get("email"), username=username)
                 if created:
                     user.username = username
                 user.save()
